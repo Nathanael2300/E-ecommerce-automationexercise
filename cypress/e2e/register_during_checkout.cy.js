@@ -91,4 +91,3 @@ describe('Register during checkout', () => {
     cy.url().should('include', 'https://www.automationexercise.com');
   });
 });
-

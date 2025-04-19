@@ -45,22 +45,14 @@ describe('Login before checkout', () => {
         cy.get('a[href="/payment"]').contains('Place Order').should('be.visible').click();
 
         cy.get('[data-qa="name-on-card"]').should('be.visible').type(userData.card_name);
-
+        
         const cardNumber = userData.card_number.replace(/-/g, '');
-
-        if (cardNumber.length >= 13 && cardNumber.length <= 19) {
-            cy.get('[data-qa="card-number"]').should('be.visible').type(userData.card_number);
-        } else {
-            throw new Error('Invalid card number! Must be between 13 and 19 digits.');
-        }
-
+        expect(cardNumber.length, 'Card number must have between 13 and 19 digits').to.be.within(13, 19);
+        cy.get('[data-qa="card-number"]').should('be.visible').type(userData.card_number);
+        
         const cardCVC = userData.cvc;
-
-        if (cardCVC.length === 3 || cardCVC.length === 4) {
-            cy.get('[data-qa="cvc"]').should('be.visible').type(userData.cvc);
-        } else {
-            throw new Error('Invalid card number! Must be between 13 and 19 digits.');
-        }
+        expect([3, 4], 'CVC must be 3 or 4 digits long').to.include(cardCVC.length);
+        cy.get('[data-qa="cvc"]').should('be.visible').type(userData.cvc);
 
         cy.get('[data-qa="expiry-month"]').should('be.visible').type(userData.expiration_month);
         cy.get('[data-qa="expiry-year"]').should('be.visible').type(userData.expiration_year);
@@ -74,7 +66,7 @@ describe('Login before checkout', () => {
                 expect(success.text()).to.include('Your order has been placed successfully!');
             } else {
                 throw new Error('Invalid card number! Must be between 13 and 19 digits.');
-            }
+            };
         });
 
         cy.get('b').contains('Order Placed!').should('be.visible');
@@ -83,4 +75,3 @@ describe('Login before checkout', () => {
         cy.url().should('include', 'https://www.automationexercise.com');
     });
 });
-

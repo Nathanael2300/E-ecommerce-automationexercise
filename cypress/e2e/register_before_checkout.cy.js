@@ -10,9 +10,10 @@ const userData = {
 
 describe('Register before checkout', () => {
     beforeEach(() => { cy.visit('/') });
+
     it('Should register before checkout', () => {
         cy.url().should('contain', 'https://www.automationexercise.com');
-        cy.get('a[href="/login"]').contains('Signup / Login').should('be.visible').click()
+        cy.get('a[href="/login"]').contains('Signup / Login').should('be.visible').click();
 
         cy.registerUser();
 
@@ -23,7 +24,7 @@ describe('Register before checkout', () => {
             .should('be.visible');
         cy.get('[data-qa="continue-button"]').click();
 
-        cy.get('a[href="/product_details/1"]').click()
+        cy.get('a[href="/product_details/1"]').click();
         cy.get('h2').contains('Blue Top').should('be.visible');
         cy.get('p').contains('Category:').parent().should('contain', 'Women > Tops');
         cy.get('span').contains('Rs. 500').should('be.visible');
@@ -45,40 +46,32 @@ describe('Register before checkout', () => {
 
         cy.reviewOrder();
 
-        let comment = 'test123';
+        const comment = 'test123';
         cy.get('.form-control').type(comment).should('be.visible');
 
-        cy.get('a[href="/payment"').should('be.visible').click();
+        cy.get('a[href="/payment"]').should('be.visible').click();
         cy.get('[data-qa="name-on-card"]').should('be.visible').type(userData.cardName);
+
         const cardNumber = userData.cardNumber.replace(/-/g, '');
-        if (cardNumber.length >= 13 && cardNumber.length <= 19) {
-            cy.get('[data-qa="card-number"]').should('be.visible').type(userData.cardNumber);
-        } else {
-            cy.log('Invalid card number! It should be between 13 and 19 digits.');
-        };
+        expect(cardNumber.length, 'Card number must have between 13 and 19 digits').to.be.within(13, 19);
+        cy.get('[data-qa="card-number"]').should('be.visible').type(userData.cardNumber);
+
         const cardCvc = userData.cvc;
-        if (cardCvc.length === 3 || cardCvc.length === 4) {
-            cy.get('[data-qa="cvc"]').should('be.visible').type(userData.cvc);
-        } else {
-            cy.log('Invalid CVC! It should have 3 or 4 digits.')
-        };
+        expect([3, 4], 'CVC must have 3 or 4 digits').to.include(cardCvc.length);
+        cy.get('[data-qa="cvc"]').should('be.visible').type(userData.cvc);
+
         cy.get('[data-qa="expiry-month"]').should('be.visible').type(userData.expiryMonth);
         cy.get('[data-qa="expiry-year"]').should('be.visible').type(userData.expiryYear);
         cy.get('button').contains('Pay and Confirm Order').should('be.visible').click();
 
         cy.get('body').then(($body) => {
             const success = $body.find('#success_message');
-            if (success.length > 0) {
-                cy.log('🎉 The message appeared in the DOM!');
-                expect(success.text()).to.include('Your order has been placed successfully!');
-            } else {
-                cy.log('❌ The message disappeared before Cypress could capture it...');
-            }
+            expect(success.length, 'Success message should appear in the DOM').to.be.greaterThan(0);
+            expect(success.text()).to.include('Your order has been placed successfully!');
         });
 
         cy.get('b').contains('Order Placed!').should('be.visible');
         cy.get('p').contains('Congratulations! Your order has been confirmed!').should('be.visible');
-        cy.get('[data-qa="continue-button"').click();
+        cy.get('[data-qa="continue-button"]').click();
     });
 });
-
