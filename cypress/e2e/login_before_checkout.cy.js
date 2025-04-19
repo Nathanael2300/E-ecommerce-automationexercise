@@ -51,7 +51,7 @@ describe('Login before checkout', () => {
         if (cardNumber.length >= 13 && cardNumber.length <= 19) {
             cy.get('[data-qa="card-number"]').should('be.visible').type(userData.card_number);
         } else {
-            cy.log('Invalid card number! Must be between 13 and 19 digits.');
+            throw new Error('Invalid card number! Must be between 13 and 19 digits.');
         }
 
         const cardCVC = userData.cvc;
@@ -59,7 +59,7 @@ describe('Login before checkout', () => {
         if (cardCVC.length === 3 || cardCVC.length === 4) {
             cy.get('[data-qa="cvc"]').should('be.visible').type(userData.cvc);
         } else {
-            cy.log('Invalid CVC. It must be 3 or 4 digits.');
+            throw new Error('Invalid card number! Must be between 13 and 19 digits.');
         }
 
         cy.get('[data-qa="expiry-month"]').should('be.visible').type(userData.expiration_month);
@@ -73,7 +73,7 @@ describe('Login before checkout', () => {
                 cy.log('🎉 Message appeared in the DOM!');
                 expect(success.text()).to.include('Your order has been placed successfully!');
             } else {
-                cy.log('❌ Message disappeared before Cypress could capture it...');
+                throw new Error('Invalid card number! Must be between 13 and 19 digits.');
             }
         });
 
