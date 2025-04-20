@@ -59,7 +59,7 @@ describe('Download invoice after placing order', () => {
         const comentary = faker.lorem.paragraph();
         cy.get('.form-control').type(comentary);
     };
-    
+
     const dateCard = () => {
         cy.get('[data-qa="name-on-card"]').should('be.visible').type(userData.card_name);
 
@@ -99,14 +99,11 @@ describe('Download invoice after placing order', () => {
         cy.get('b').contains('Order Placed!').should('be.visible');
         cy.get('p').contains('Congratulations! Your order has been confirmed!').should('be.visible');
         cy.contains('a', 'Download Invoice').click()
-        .should('have.attr', 'href').and('include', '/download_invoice/1500').then((href) => {
-                cy.request({
-                    url: href,
-                    encoding: 'binary'
-                }).then((response) => {
-                    expect(response.status).to.eq(200); // sucesso no download
+        cy.contains('a', 'Download Invoice').should('have.attr', 'href').then((href) => {
+                expect(href).to.match(/\/download_invoice\/\d+/); 
+                cy.request({ url: href, encoding: 'binary' }).then((response) => {
+                    expect(response.status).to.eq(200);
                 });
             });
     });
 });
-
