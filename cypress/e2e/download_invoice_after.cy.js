@@ -99,7 +99,7 @@ describe('Download invoice after placing order', () => {
         cy.get('b').contains('Order Placed!').should('be.visible');
         cy.get('p').contains('Congratulations! Your order has been confirmed!').should('be.visible');
         cy.contains('a', 'Download Invoice').click()
-            .should('have.attr', 'href').and('include', '/download_invoice/1500').then((href) => {
+        .should('have.attr', 'href').and('include', '/download_invoice/1500').then((href) => {
                 cy.request({
                     url: href,
                     encoding: 'binary'

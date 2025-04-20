@@ -52,7 +52,7 @@ describe('Register before checkout', () => {
         cy.get('a[href="/payment"]').should('be.visible').click();
         cy.get('[data-qa="name-on-card"]').should('be.visible').type(userData.card_name);
 
-        const cardNumber = userData.cardNumber.replace(/-/g, '');
+        const cardNumber = userData.card_number.replace(/-/g, '');
         expect(cardNumber.length, 'Card number must have between 13 and 19 digits').to.be.within(13, 19);
         cy.get('[data-qa="card-number"]').should('be.visible').type(userData.card_number);
 
