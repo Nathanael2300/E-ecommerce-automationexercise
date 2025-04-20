@@ -64,7 +64,7 @@ describe('Login before checkout', () => {
                 expect(success.text()).to.include('Your order has been placed succesfully');
             } else {
                 cy.log('Invalid card number! Must be between 13 and 19 digits.');
-            }
+            };
         });
 
         cy.get('b').contains('Order Placed!').should('be.visible');
