@@ -84,7 +84,7 @@ describe('Download invoice after placing order', () => {
                 cy.log('Invalid card number! Must be between 13 and 19 digits.');
             };
         });
-    }
+    };
 
     it('Should download invoice after order is completed', () => {
         visitHomePage();
